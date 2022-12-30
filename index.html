@@ -79,7 +79,7 @@
       style: function (feature) { //Fungsi style polygon
         return {
           fillColor: "blue", //Warna tengah polygon
-          fillOpacity: 0, //Transparansi tengah polygon
+          fillOpacity: 0.2, //Transparansi tengah polygon
           color: "red", //Warna garis tepi polygon
           weight: 2, //Tebal garis tepi polygon
           opacity: 1, //Transparansi garis tepi polygon
@@ -190,6 +190,70 @@
       sungai.addData(data);
       map.addLayer(sungai); //jalanutama ditampilkan ketika halaman dipanggil
     });
+    /* GeoJSON Point */
+    var wisata = L.geoJson(null, {
+      pointToLayer: function (feature, latlng) {
+        return L.marker(latlng, {
+          icon: L.icon({
+            iconUrl: "https://cdn-icons-png.flaticon.com/512/6554/6554183.png", //icon simbol
+            iconSize: [28, 28], //ukuran icon simbol
+            iconAnchor: [14, 28], //penempatan icon simbol
+            popupAnchor: [0, -28], //penempatan popup terhadap icon simbol
+          })
+        });
+      },
+      /* Popup */
+      onEachFeature: function (feature, layer) {
+        if (feature.properties) {
+          /* Variabel untuk memanggil atribut dari data geojson */
+          var content = "Nama : " + feature.properties.Nama + "<br>" +
+            "Rating : " + feature.properties.Rating + "<br>" +
+            "Alamat : <br>" + feature.properties.Alamat;
+          layer.on({
+            click: function (e) { //Fungsi ketika icon simbol di-klik
+              wisata.bindPopup(content);
+            }
+          });
+        }
+      }
+    });
+    /* GeoJSON Point */
+var kesehatan = L.geoJson(null, {
+pointToLayer: function (feature, latlng) {
+  return L.marker(latlng, {
+    icon: L.icon({
+      iconUrl: "https://indok3ll.com/wp-content/uploads/2018/12/kesehatan-icon.png", //icon simbol
+      iconSize: [28, 28], //ukuran icon simbol
+      iconAnchor: [14, 28], //penempatan icon simbol
+      popupAnchor: [0, -28], //penempatan popup terhadap icon simbol
+    })
+  });
+},
+/* Popup */
+onEachFeature: function (feature, layer) {
+  if (feature.properties) {
+    /* Variabel untuk memanggil atribut dari data geojson */
+    var content = "Kabupaten/Kota : " + feature.properties.KAB_KOTA + "<br>" +
+      "Provinsi : " + feature.properties.PROVINSI + "<br>" +
+      "Logo : <br>" + feature.properties.LOGO;
+    layer.on({
+      click: function (e) { //Fungsi ketika icon simbol di-klik
+        kesehatan.bindPopup(content);
+      }
+    });
+  }
+}
+});
+/* memanggil data geojson point */
+$.getJSON("kesehatan.geojson", function (data) {
+kesehatan.addData(data);
+map.addLayer(kesehatan); //titikkabkota ditampilkan ketika halaman dipanggil
+});
+    /* memanggil data geojson point */
+    $.getJSON("wisata.geojson", function (data) {
+      wisata.addData(data);
+      map.addLayer(wisata); //wisata ditampilkan ketika halaman dipanggil
+    });
     //akhir layer peta geojson poligon
     GoogleHybrid.addTo(map); //Memanggil basemap untuk ditampilkan ketika halaman dipanggil
     var baseMaps = { //list basemap
@@ -202,7 +266,9 @@
     var Layers = {  //list layer
       'jalan Utama': jalanutama,
       'Admin Desa': admindesa,
-      'sungai': sungai
+      'sungai': sungai,
+      'wisata' : wisata,
+      'kesehatan' : kesehatan
     };
     var layerControl = L.control.layers(baseMaps, Layers, { collapsed: false });
 
